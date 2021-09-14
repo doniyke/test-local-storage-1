@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello Trying Out Local Storage</title>
+</head>
+<body>
+	<div>
+		<h1>Welcome To The Local Storage Stuff</h1>
+		<h2 id="playerName">player name not set</h2>
+		<h3>Total Points : <span id="playerPoint">0</span></h3>
+		<h3>Current Level : <span id="playerLevel">0</span></h3>
+		<button onclick="resetPoint()">Reset Points</button>
+		<button onclick="clearData()">Clear Data</button>
+	</div>
+	<div>
+		<h3>Game Area</h3>
+		<h1>Display Data : <span id="displayData">0</span></h1>
+		<h2>Your Guess : <span id="playerGuess">0</span></h2>
+
+		<button onclick="makeAGuess()">Make A New Guess</button>
+	</div>
+
+
+	<script src="local.js"></script>
+</body>
+</html>
