@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Cart</title>
+    <style>
+        .boxed{
+            border: 1px solid #ccc;
+        }
+        .flex{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex">
+        <div>
+            <div class="boxed">
+                <h1>Product 1</h1>
+                <h3>Price : # 200</h3>
+                <button onclick='addItemToCart("Product 1",200,1)'>Add to Cart</button>
+            </div>
+            <div class="boxed">
+                <h1>Product 2</h1>
+                <h3>Price : # 300</h3>
+                <button onclick='addItemToCart("Product 2",300,2)'>Add to Cart</button>
+            </div>
+            <div class="boxed">
+                <h1>Product 3</h1>
+                <h3>Price : # 500</h3>
+                <button onclick='addItemToCart("Product 3",500,3)'>Add to Cart</button>
+            </div>
+        </div>
+        <div>
+            <h1>Items In Cart - <span id="numberOfItems">0</span></h1>
+            <div id="showCart">
+                <!-- cart is empty
+                <h3>Product Name | Price | quantity | total <button>Remove</button></h3>
+                <h3>Product Name | Price | quantity | total <button>Remove</button></h3> -->
+            </div>
+            <div>Total To Pay - <span id="showTotal">0</span> <button>Checkout and Pay</button></div>
+
+        </div>
+    </div>
+
+    <script>
+        function getCartItems(){
+            let cartData = localStorage.getItem("cartData");
+            if(cartData == null){
+               return cartData = [];
+            }else{
+                return cartData = JSON.parse(cartData);
+            }    
+        }
+
+        function addItemToCart(name,price,id){
+            displayCart();
+            let productName = name;
+            let productPrice = price;
+            let productId = id;
+
+            let cartItem = {
+                "productName" : productName,
+                "productPrice" : productPrice,
+                "productId" : productId,
+                "quantity" : 1
+            }
+
+            let cartData = getCartItems();
+
+            const checkSingleItem = cartData.some(item => item.productId == productId);
+
+            if(!checkSingleItem){
+                cartData.push(cartItem);
+                localStorage.setItem("cartData", JSON.stringify(cartData));
+                getCartItems();
+                displayCart();
+            }else{
+                for (let item in cartData) {
+                    if (cartData[item].productId == productId) {
+                        cartData[item].quantity = cartData[item].quantity+1;   
+                        break;
+                    }
+                }
+                localStorage.setItem("cartData", JSON.stringify(cartData));
+                displayCart();
+            }
+
+            // console.log(cartData)
+            
+
+        }
+
+        function displayCart(){
+            document.getElementById('showCart').innerHTML = ''
+            let cartData = getCartItems();
+            let cartDiv = document.getElementById('showCart');
+            let total = 0;
+            let itemsInCart = 0
+            for (let item in cartData) {
+                let singleItem = document.createElement('div');
+                let productId = cartData[item].productId
+                singleItem.innerHTML = `<h1>${cartData[item].productName} | ${cartData[item].productPrice} | ${cartData[item].quantity} | <button onclick='removeItem(${productId})'>Remove</button></h1>`;
+                total = total + (cartData[item].productPrice * cartData[item].quantity);
+                itemsInCart = itemsInCart + 1;
+                document.getElementById('numberOfItems').innerHTML = itemsInCart;
+                cartDiv.appendChild(singleItem);
+                document.getElementById('showTotal').innerHTML = total;
+            }
+
+        }
+
+        function removeItem(id){
+            let cartData = getCartItems();
+            for (let item in cartData) {
+                if (cartData[item].productId == id) {
+                    if(confirm("Do you want to remove this product?")){
+                        cartData.splice(item, 1);
+                        alert("Product Removed Successfully")
+                    }
+                    
+                }
+            }
+            localStorage.setItem("cartData", JSON.stringify(cartData));
+            displayCart();
+        }
+        displayCart();
+    </script>
+    
+    
+</body>
+</html>
